@@ -11,12 +11,12 @@ import Footer from "components/Footer.js";
 function App() {
   return (
     <main className="App">
+      <Navigation />
       <div className="wrapper">
-        <Navigation />
         <PlayerAndQueue />
         <TopPlaylists />
-        <Footer />
       </div>
+      <Footer />
     </main>
   );
 }

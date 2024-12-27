@@ -1,4 +1,6 @@
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: inherit;
 }
 
@@ -23,10 +25,11 @@ html body {
 
 #logoStyle {
   width: 120px;
+  margin-left: 5vw;
 }
 
 .wrapper {
-  width: 95vw;
+  width: 90vw;
   margin: 0 auto;
 }
 
@@ -37,6 +40,7 @@ nav {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  z-index: 99;
 }
 
 .hamburgerMenu {
@@ -52,9 +56,10 @@ nav {
 .nowPlayingQueue {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   padding-top: 40px;
+  gap: 60px;
 }
 
 .nowPlayingQueue .nowPlayingSection {
@@ -65,10 +70,10 @@ nav {
   width: 40vw;
 }
 
-.centering{  
+.centering {
   display: flex;
   flex-direction: column;
-  align-items: center;  
+  align-items: center;
   justify-content: center;
 }
 
@@ -141,20 +146,21 @@ nav {
 
 .songName {
   font-size: 1.8rem;
+  font-weight: 600;
 }
 
 .artistName {
   font-size: 1.2rem;
 }
 
-.songLengthDuration{  
+.songLengthDuration {
   display: flex;
   align-items: baseline;
   gap: 15px;
   width: 70%;
 }
 
-.songLength{
+.songLength {
   margin-top: 20px;
   background-color: #ffffff;
   height: 5px;
@@ -164,20 +170,95 @@ nav {
   align-items: center;
 }
 
-.songLengthPoint{
+.songLengthPoint {
   background-color: #ffffff;
   height: 15px;
   width: 15px;
   border-radius: 50%;
 }
 
-.songDuration{
+.songDuration {
   color: #ffffff;
   font-size: 1.1rem;
 }
 
-.favoriteSongIcon{
+.favoriteSongIcon {
   color: #ffe204;
   font-size: 30px;
   padding-right: 10px;
+}
+
+.queueList {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.songInQueue {
+  width: 100%;
+  height: 100px;
+  background-color: #0a0a0a;
+  border-radius: 8px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.songImage {
+  width: 140px;
+  height: inherit;
+  background-color: #3f3f3f;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.songAndArtistInQueue {
+  color: #ffffff;
+  line-height: 32px;
+}
+
+.playIconQueue{
+  color: #ffe204;
+  font-size: 35px;
+  position: absolute;
+  right: 30px;
+}
+
+.songNameInQueue{
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.playListsList{
+  display: flex;
+  gap: 20px;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.playlist{
+  width: 350px;
+  height: 300px;
+  border-radius: 8px;
+  background-color: #111111;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1.4rem;
+  text-align: center;
+  position: relative;
+}
+
+.playlistName{
+  position: relative;
+  top: 250px;
+}
+
+footer{
+  margin-top: 50px;
+  background-color: #0E0E0E;
+  height: 380px;
+  color: #ffffff;
 }

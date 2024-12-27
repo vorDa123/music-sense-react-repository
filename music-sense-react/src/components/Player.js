@@ -6,6 +6,7 @@ import {
   faForwardStep,
   faShuffle,
   faStar,
+  faPause,
 } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faRegStar } from "@fortawesome/free-regular-svg-icons";
 
