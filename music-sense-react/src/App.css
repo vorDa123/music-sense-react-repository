@@ -1,46 +1,183 @@
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+html {
+  /* this makes sure the padding and the border is included in the box sizing */
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+html body {
+  padding: 0;
+  margin: 0;
+  overflow-x: inherit;
+}
+
 .App {
   background-color: #161616;
   width: 100vw;
-  height: 100vh;
   font-family: "Poppins", sans-serif;
+  overflow-y: hidden;
 }
 
-#logoStyle{
+#logoStyle {
   width: 120px;
 }
 
-.wrapper{
+.wrapper {
   width: 95vw;
   margin: 0 auto;
 }
 
-nav{
+nav {
+  position: fixed;
+  width: 95vw;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
 }
 
-.hamburgerMenu{
+.hamburgerMenu {
   font-size: 30px;
-  color: #FFE204;
+  color: #ffe204;
 }
 
-.title{
-  color: #FFE204;
+.title {
+  color: #ffe204;
   font-size: 30px;
 }
 
-.nowPlayingQueue{
+.nowPlayingQueue {
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
+  padding-top: 40px;
 }
 
 .nowPlayingQueue .nowPlayingSection {
-  width: 70vw;
+  width: 60vw;
 }
 
 .nowPlayingQueue .inQueueSection {
-  width: 30vw;
+  width: 40vw;
+}
+
+.centering{  
+  display: flex;
+  flex-direction: column;
+  align-items: center;  
+  justify-content: center;
+}
+
+.record {
+  width: 450px;
+  height: 450px;
+  background-color: #0a0a0a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.record::before,
+.record::after {
+  position: absolute;
+  content: "";
+  border: 5px solid transparent;
+  border-top-color: #3f3f3f;
+  border-bottom-color: #3f3f3f;
+  border-radius: 50%;
+}
+
+.record::before {
+  width: 350px;
+  height: 350px;
+}
+
+.record::after {
+  width: 250px;
+  height: 250px;
+}
+
+.labelImage {
+  background-color: #ffe204;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.label {
+  background-color: #161616;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.playerControls {
+  width: 35%;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.playerIcon {
+  color: #ffffff;
+  font-size: 25px;
+}
+
+.songAndArtist {
+  color: #ffffff;
+  font-weight: 500;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.songName {
+  font-size: 1.8rem;
+}
+
+.artistName {
+  font-size: 1.2rem;
+}
+
+.songLengthDuration{  
+  display: flex;
+  align-items: baseline;
+  gap: 15px;
+  width: 70%;
+}
+
+.songLength{
+  margin-top: 20px;
+  background-color: #ffffff;
+  height: 5px;
+  width: 100%;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.songLengthPoint{
+  background-color: #ffffff;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+}
+
+.songDuration{
+  color: #ffffff;
+  font-size: 1.1rem;
+}
+
+.favoriteSongIcon{
+  color: #ffe204;
+  font-size: 30px;
+  padding-right: 10px;
 }

@@ -15,7 +15,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faRegStar } from "@fortawesome/free-regular-svg-icons"; //ista ikonica drugaciji stil, pozivat cu je sa faRegStar
 
-// Ovako prikazujem fontawesome ikonice <FontAwesomeIcon icon={faPlay} className="playIcon" />
+//Components
+import PlayerAndQueue from "./components/PlayerAndQueue.js";
+import TopPlaylists from "./components/TopPlaylists.js";
+
+// Ovako prikazujem fontawesome ikonice: <FontAwesomeIcon icon={faPlay} className="playIcon" />
 
 function App() {
   return (
@@ -25,17 +29,8 @@ function App() {
           <img src={MusicSenseLogo} id="logoStyle" alt="logo" />
           <FontAwesomeIcon icon={faBars} className="hamburgerMenu" />
         </nav>
-        <section className="nowPlayingQueue">
-          <article className="nowPlayingSection">
-            <h1 className="title">Now playing</h1>
-          </article>
-          <article className="inQueueSection">
-            <h1 className="title">In queue</h1>
-          </article>
-        </section>
-        <section className="topPlaylists">
-          <h1 className="title">Top playlists</h1>
-        </section>
+        <PlayerAndQueue />
+        <TopPlaylists />
         {/* <footer>
         </footer> */}
       </div>
