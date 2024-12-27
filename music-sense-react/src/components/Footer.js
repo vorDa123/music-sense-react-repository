@@ -9,6 +9,6 @@ import {
   faHome,
 } from "@fortawesome/free-solid-svg-icons";
 
-export default function Navigation() {
+export default function Footer() {
   return <footer></footer>;
 }
