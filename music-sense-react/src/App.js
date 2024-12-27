@@ -4,6 +4,7 @@ import "App.css";
 import Navigation from "components/Navigation.js";
 import PlayerAndQueue from "components/PlayerAndQueue.js";
 import TopPlaylists from "components/TopPlaylists.js";
+import Footer from "components/Footer.js";
 
 // Ovako prikazujem fontawesome ikonice: <FontAwesomeIcon icon={faPlay} className="playIcon" />
 
@@ -14,8 +15,7 @@ function App() {
         <Navigation />
         <PlayerAndQueue />
         <TopPlaylists />
-        {/* <footer>
-        </footer> */}
+        <Footer />
       </div>
     </main>
   );
