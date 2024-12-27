@@ -1,4 +1,4 @@
-import "../App.css";
+import "App.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlay,
@@ -6,11 +6,6 @@ import {
   faForwardStep,
   faShuffle,
   faStar,
-  faBars,
-  faXmark,
-  faUser,
-  faMusic,
-  faHome,
 } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faRegStar } from "@fortawesome/free-regular-svg-icons";
 

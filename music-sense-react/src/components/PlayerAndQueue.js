@@ -1,22 +1,8 @@
-import "../App.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPlay,
-  faRepeat,
-  faForwardStep,
-  faShuffle,
-  faStar,
-  faBars,
-  faXmark,
-  faUser,
-  faMusic,
-  faHome,
-} from "@fortawesome/free-solid-svg-icons";
-import { faStar as faRegStar } from "@fortawesome/free-regular-svg-icons";
+import "App.css";
 
 //Components
-import Player from "./Player.js";
-import Queue from "./Queue.js";
+import Player from "components/Player.js";
+import Queue from "components/Queue.js";
 
 export default function PlayerAndQueue() {
   return (
