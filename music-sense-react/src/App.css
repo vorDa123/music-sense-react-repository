@@ -46,6 +46,7 @@ nav {
 .hamburgerMenu {
   font-size: 30px;
   color: #ffe204;
+  cursor: pointer;
 }
 
 .title {
@@ -135,6 +136,7 @@ nav {
 .playerIcon {
   color: #ffffff;
   font-size: 25px;
+  cursor: pointer;
 }
 
 .songAndArtist {
@@ -186,6 +188,7 @@ nav {
   color: #ffe204;
   font-size: 30px;
   padding-right: 10px;
+  cursor: pointer;
 }
 
 .queueList {
@@ -225,6 +228,7 @@ nav {
   font-size: 35px;
   position: absolute;
   right: 30px;
+  cursor: pointer;
 }
 
 .songNameInQueue {
@@ -320,6 +324,7 @@ footer {
   padding: 10px 30px;
   font-family: "Poppins", sans-serif;
   font-weight: 500;
+  cursor: pointer;
 }
 
 .buttons p {
