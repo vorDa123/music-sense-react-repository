@@ -15,6 +15,12 @@ export default function SignedInUserMenu() {
   let handleSidebarMenu = () => {
     setMenuClicked((prevState) => !prevState);
   };
+
+  let handleLogOut = () => {
+    setMenuClicked((prevState) => !prevState);
+    localStorage.clear();
+  };
+
   if (menuClicked) {
     return (
       <section className="signInRegister">
@@ -53,7 +59,7 @@ export default function SignedInUserMenu() {
           <br />
         </div>
         <div className="buttons paddingBottom">
-          <button>Log out</button>
+          <button onClick={handleLogOut}>Log out</button>
         </div>
       </section>
     );
