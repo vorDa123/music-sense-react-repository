@@ -2,17 +2,25 @@ import "App.css";
 import MusicSenseLogo from "assets/MusicSenseLogo.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 //Components
 import SignInRegister from "components/SignInRegister.js";
+import SignedInUserMenu from "components/SignedInUserMenu.js";
 
 export default function Navigation() {
   let [menuClicked, setMenuClicked] = useState(false);
+  let [signedInUser, setSignedInUser] = useState("");
 
   let handleSidebarMenu = () => {
     setMenuClicked((prevState) => !prevState);
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("signedIn")) {
+      setSignedInUser(localStorage.getItem("signedIn"));
+    }
+  }, []);
 
   return (
     <>
@@ -24,7 +32,11 @@ export default function Navigation() {
           onClick={handleSidebarMenu}
         />
       </nav>
-      {menuClicked ? <SignInRegister /> : null}
+      {menuClicked && signedInUser == "true" ? (
+        <SignedInUserMenu />
+      ) : menuClicked && signedInUser !== "true" ? (
+        <SignInRegister />
+      ) : null}
     </>
   );
 }

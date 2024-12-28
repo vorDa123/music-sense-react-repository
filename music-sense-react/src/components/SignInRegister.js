@@ -7,25 +7,45 @@ import { useEffect, useState } from "react";
 export default function SignInRegister() {
   const CLIENT_ID = "727a7c097cfb4ec4997132e3824c3a6d";
   const CLIENT_SECRET = "96548f701f594b1b980d1d33ef2fd04b";
-
-  useEffect(() => {
-    // API Access Token
-    let authParameters = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: `grant_type=client_credentials&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}`,
-    };
-    fetch("https://accounts.spotify.com/api/token", authParameters)
-      .then((result) => result.json())
-      .then((data) => console.log(data));
-  }, []);
+  const SPOTIFY_AUTHORIZE_ENDPOINT = "https://accounts.spotify.com/authorize";
+  const REDIRECT_URI_AFTER_LOGIN = "http://localhost:3000";
+  const SPACE_DELIMITER = "%20";
+  const SCOPES = ["user-read-currently-playing", "user-read-playback-state"];
+  const SCOPES_URL_PARAM = SCOPES.join(SPACE_DELIMITER);
 
   let [menuClicked, setMenuClicked] = useState(true);
 
   let handleSidebarMenu = () => {
     setMenuClicked((prevState) => !prevState);
+  };
+
+  const getReturnedParamsFromSpotifyAuth = (hash) => {
+    const stringAfterHashtag = hash.substring(1);
+    const paramsInUrl = stringAfterHashtag.split("&");
+    const paramsSplitUp = paramsInUrl.reduce((accumulator, currentValue) => {
+      const [key, value] = currentValue.split("=");
+      accumulator[key] = value;
+      return accumulator;
+    }, {});
+
+    return paramsSplitUp;
+  };
+
+  useEffect(() => {
+    if (window.location.hash) {
+      const { access_token, expires_in, token_type } =
+        getReturnedParamsFromSpotifyAuth(window.location.hash);
+        
+        localStorage.clear();
+        localStorage.setItem("accessToken", access_token);
+        localStorage.setItem("tokenType", token_type);
+        localStorage.setItem("expiresIn", expires_in);
+        localStorage.setItem("signedIn", true);
+    }
+  });
+
+  const handleLogin = () => {
+    window.location = `${SPOTIFY_AUTHORIZE_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI_AFTER_LOGIN}&scope=${SCOPES_URL_PARAM}&response_type=token&show_dialog=true`;
   };
 
   if (menuClicked) {
@@ -45,7 +65,7 @@ export default function SignInRegister() {
             <br />
             <button>Register</button>
             <p>OR</p>
-            <button>Sign in with Spotify</button>
+            <button onClick={handleLogin}>Sign in with Spotify</button>
           </div>
           <img
             src={MusicSenseLogo}
