@@ -40,7 +40,7 @@ nav {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  z-index: 99;
+  z-index: 1;
 }
 
 .hamburgerMenu {
@@ -220,26 +220,26 @@ nav {
   line-height: 32px;
 }
 
-.playIconQueue{
+.playIconQueue {
   color: #ffe204;
   font-size: 35px;
   position: absolute;
   right: 30px;
 }
 
-.songNameInQueue{
+.songNameInQueue {
   font-size: 1.4rem;
   font-weight: 600;
 }
 
-.playListsList{
+.playListsList {
   display: flex;
   gap: 20px;
   justify-content: flex-start;
   align-items: center;
 }
 
-.playlist{
+.playlist {
   width: 350px;
   height: 300px;
   border-radius: 8px;
@@ -251,14 +251,97 @@ nav {
   position: relative;
 }
 
-.playlistName{
+.playlistName {
   position: relative;
   top: 250px;
 }
 
-footer{
+footer {
   margin-top: 50px;
-  background-color: #0E0E0E;
+  background-color: #0e0e0e;
   height: 380px;
   color: #ffffff;
+}
+
+.footerContent {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 50px;
+}
+
+.sitemapInfo {
+  text-align: right;
+}
+
+.copyright {
+  font-size: small;
+  text-align: center;
+  position: relative;
+  top: 60px;
+}
+
+.signInRegister {
+  background-color: #0a0a0a;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 29.3vw;
+  height: 100%;
+  z-index: 2;
+  position: fixed;
+  top: 0;
+  right: 0;
+  overflow-x: hidden;
+}
+
+.titleAndIcon {
+  display: flex;
+  flex-direction: row;
+  gap: 250px;
+  align-items: center;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.buttons button{
+  background-color: #ffe204;
+  border-style: none;
+  text-align: center;
+  font-size: 1.2rem;
+  color: #111111;
+  border-radius: 40px;
+  padding: 10px 30px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+}
+
+.buttons p {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.menuList {
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.menuList span{
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.paddingBottom{
+  padding-bottom: 20px;
 }
