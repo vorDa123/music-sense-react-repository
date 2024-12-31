@@ -10,16 +10,15 @@ import SignedInUserMenu from "components/SignedInUserMenu.js";
 
 export default function Navigation() {
   let [menuClicked, setMenuClicked] = useState(false);
-  let [signedInUser, setSignedInUser] = useState("");
+  const [token, setToken] = useState("");
 
   let handleSidebarMenu = () => {
     setMenuClicked((prevState) => !prevState);
   };
 
   useEffect(() => {
-    if (localStorage.getItem("signedIn")) {
-      setSignedInUser(localStorage.getItem("signedIn"));
-    }
+    let token = window.localStorage.getItem("token");
+    setToken(token);
   }, []);
 
   return (
@@ -32,9 +31,9 @@ export default function Navigation() {
           onClick={handleSidebarMenu}
         />
       </nav>
-      {menuClicked && signedInUser == "true" ? (
+      {menuClicked && token ? (
         <SignedInUserMenu />
-      ) : menuClicked && signedInUser !== "true" ? (
+      ) : menuClicked && !token ? (
         <SignInRegister />
       ) : null}
     </>
