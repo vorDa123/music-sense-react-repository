@@ -9,9 +9,6 @@ export default function SignInRegister() {
   const CLIENT_SECRET = "96548f701f594b1b980d1d33ef2fd04b";
   const SPOTIFY_AUTHORIZE_ENDPOINT = "https://accounts.spotify.com/authorize";
   const REDIRECT_URI_AFTER_LOGIN = "http://localhost:3000";
-  const SPACE_DELIMITER = "%20";
-  const SCOPES = ["user-read-currently-playing", "user-read-playback-state"];
-  const SCOPES_URL_PARAM = SCOPES.join(SPACE_DELIMITER);
 
   let [menuClicked, setMenuClicked] = useState(true);
   let [token, setToken] = useState("");
@@ -28,6 +25,7 @@ export default function SignInRegister() {
       token = hash.substring(1).split("&").find(elem => elem.startsWith("access_token")).split("=")[1];
       window.location.hash = "";
       window.localStorage.setItem("token", token);
+      window.location.reload();
     }
     setToken(token);
   }, []);

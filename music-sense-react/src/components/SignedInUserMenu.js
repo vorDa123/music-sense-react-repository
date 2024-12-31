@@ -21,6 +21,8 @@ export default function SignedInUserMenu() {
   let handleLogOut = () => {
     setToken("");
     window.localStorage.removeItem("token");
+    setMenuClicked((prevState) => !prevState);
+    window.location.reload();
   };
 
   if (menuClicked) {
