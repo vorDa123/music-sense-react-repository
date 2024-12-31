@@ -12,13 +12,15 @@ import {
 export default function SignedInUserMenu() {
   let [menuClicked, setMenuClicked] = useState(true);
 
+  let [token, setToken] = useState("");
+
   let handleSidebarMenu = () => {
     setMenuClicked((prevState) => !prevState);
   };
 
   let handleLogOut = () => {
-    setMenuClicked((prevState) => !prevState);
-    localStorage.clear();
+    setToken("");
+    window.localStorage.removeItem("token");
   };
 
   if (menuClicked) {

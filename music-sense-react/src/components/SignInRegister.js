@@ -14,38 +14,26 @@ export default function SignInRegister() {
   const SCOPES_URL_PARAM = SCOPES.join(SPACE_DELIMITER);
 
   let [menuClicked, setMenuClicked] = useState(true);
-
+  let [token, setToken] = useState("");
+  
   let handleSidebarMenu = () => {
     setMenuClicked((prevState) => !prevState);
-  };
-
-  const getReturnedParamsFromSpotifyAuth = (hash) => {
-    const stringAfterHashtag = hash.substring(1);
-    const paramsInUrl = stringAfterHashtag.split("&");
-    const paramsSplitUp = paramsInUrl.reduce((accumulator, currentValue) => {
-      const [key, value] = currentValue.split("=");
-      accumulator[key] = value;
-      return accumulator;
-    }, {});
-
-    return paramsSplitUp;
-  };
-
+  };  
+  
   useEffect(() => {
-    if (window.location.hash) {
-      const { access_token, expires_in, token_type } =
-        getReturnedParamsFromSpotifyAuth(window.location.hash);
-        
-        localStorage.clear();
-        localStorage.setItem("accessToken", access_token);
-        localStorage.setItem("tokenType", token_type);
-        localStorage.setItem("expiresIn", expires_in);
-        localStorage.setItem("signedIn", true);
+    const hash = window.location.hash;
+    let token = window.localStorage.getItem("token");
+
+    if (!token && hash) {
+      token = hash.substring(1).split("&").find(elem => elem.startsWith("access_token")).split("=")[1];
+      window.location.hash = "";
+      window.localStorage.setItem("token", token);
     }
-  });
+    setToken(token);
+  }, []);
 
   const handleLogin = () => {
-    window.location = `${SPOTIFY_AUTHORIZE_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI_AFTER_LOGIN}&scope=${SCOPES_URL_PARAM}&response_type=token&show_dialog=true`;
+    window.location = `${SPOTIFY_AUTHORIZE_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI_AFTER_LOGIN}&response_type=token&show_dialog=true`;
   };
 
   if (menuClicked) {
