@@ -53,7 +53,7 @@ function App() {
     <main className="App">
       <Navigation token={token} onTokenUpdate={handleTokenUpdate} />
       <div className="wrapper">
-        <PlayerAndQueue />
+        <PlayerAndQueue token={token} />
         <TopPlaylists token={token} />
       </div>
       <Footer />

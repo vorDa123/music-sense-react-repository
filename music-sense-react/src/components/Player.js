@@ -10,7 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faRegStar } from "@fortawesome/free-regular-svg-icons";
 
-export default function Player() {
+export default function Player({ token }) {
   return (
     <article className="nowPlayingSection">
       <h1 className="title">Now playing</h1>
