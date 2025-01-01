@@ -34,14 +34,59 @@ export default function TopPlaylists() {
     setToken(token);
   }, []);
 
-  return (
-    <section className="topPlaylists">
-      <h1 className="title">Top playlists</h1>
-      <div className="playListsList">
-        {playlists.slice(0, 5).map((playlist) => (
-          <Playlist playlistId={playlist.id} playlistName={playlist.name} playlistImage={playlist.images[1].url}/>
-        ))}
-      </div>
-    </section>
-  );
+  let playlistDefault = [
+    {
+      id: 1,
+      name: "Rock",
+      image: "",
+    },
+    {
+      id: 2,
+      name: "Pop",
+      image: "",
+    },
+    {
+      id: 3,
+      name: "Metal",
+      image: "",
+    },
+    {
+      id: 4,
+      name: "Country",
+      image: "",
+    },
+    {
+      id: 5,
+      name: "Hip hop",
+      image: "",
+    },
+  ];
+
+  if (token) {
+    return (
+      <section className="topPlaylists">
+        <h1 className="title">Top playlists</h1>
+        <div className="playListsList">
+          {playlists.slice(0, 5).map((playlist) => (
+            <Playlist
+              playlistId={playlist.id}
+              playlistName={playlist.name}
+              playlistImage={playlist.images[1].url}
+            />
+          ))}
+        </div>
+      </section>
+    );
+  } else {
+    return (
+      <section className="topPlaylists">
+        <h1 className="title">Top playlists</h1>
+        <div className="playListsList">
+          {playlistDefault.map((playlist) => (
+            <Playlist playlistId={playlist.id} playlistName={playlist.name} />
+          ))}
+        </div>
+      </section>
+    );
+  }
 }
