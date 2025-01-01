@@ -16,22 +16,6 @@ export default function SignInRegister({onTokenUpdate}) {
     setMenuClicked((prevState) => !prevState);
   };
 
-  useEffect(() => {
-    const hash = window.location.hash;
-    let token = window.localStorage.getItem("token");
-
-    if (!token && hash) {
-      token = hash
-        .substring(1)
-        .split("&")
-        .find((elem) => elem.startsWith("access_token"))
-        .split("=")[1];
-      window.location.hash = "";
-      window.localStorage.setItem("token", token);
-      onTokenUpdate(token);
-    }
-  }, [onTokenUpdate]);
-
   const handleLogin = () => {
     window.location = `${SPOTIFY_AUTHORIZE_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI_AFTER_LOGIN}&response_type=token&show_dialog=true`;
   };

@@ -12,8 +12,6 @@ import {
 export default function SignedInUserMenu({onLogOut}) {
   let [menuClicked, setMenuClicked] = useState(true);
 
-  let [token, setToken] = useState("");
-
   let handleSidebarMenu = () => {
     setMenuClicked((prevState) => !prevState);
   };

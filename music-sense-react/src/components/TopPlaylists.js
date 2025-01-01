@@ -5,12 +5,16 @@ import { useEffect, useState } from "react";
 //Components
 import Playlist from "components/Playlist.js";
 
-export default function TopPlaylists() {
-  const [token, setToken] = useState("");
+export default function TopPlaylists({token}) {
   const [playlists, setPlaylists] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const playlistFetch = async () => {
+      if (!token) return;
+
       try {
+        setLoading(true);
         const { data } = await axios.get(
           "https://api.spotify.com/v1/me/playlists",
           {
@@ -23,16 +27,13 @@ export default function TopPlaylists() {
         setPlaylists(data.items);
       } catch (error) {
         console.error("Error fetching palylists:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     playlistFetch();
   }, [token]);
-
-  useEffect(() => {
-    let token = window.localStorage.getItem("token");
-    setToken(token);
-  }, []);
 
   let playlistDefault = [
     {
@@ -62,7 +63,8 @@ export default function TopPlaylists() {
     },
   ];
 
-  if (token) {
+
+  if (token && playlists.length > 0 && !loading) {
     return (
       <section className="topPlaylists">
         <h1 className="title">Top playlists</h1>
