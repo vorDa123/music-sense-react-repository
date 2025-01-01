@@ -350,3 +350,11 @@ footer {
 .paddingBottom{
   padding-bottom: 20px;
 }
+
+.alignCenter{
+  text-align: center;
+}
+
+.pointerCursor{
+  cursor: pointer;
+}

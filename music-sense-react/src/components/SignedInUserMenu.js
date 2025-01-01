@@ -9,7 +9,7 @@ import {
   faHome,
 } from "@fortawesome/free-solid-svg-icons";
 
-export default function SignedInUserMenu({onLogOut}) {
+export default function SignedInUserMenu({ onLogOut }) {
   let [menuClicked, setMenuClicked] = useState(true);
 
   let handleSidebarMenu = () => {
@@ -28,30 +28,41 @@ export default function SignedInUserMenu({onLogOut}) {
           />
         </div>
         <div className="menuList">
-          <FontAwesomeIcon
-            icon={faHome}
-            className="hamburgerMenu paddingRight"
-          />
-          <span>Home</span>
+          <div className="alignCenter pointerCursor">
+            <FontAwesomeIcon
+              icon={faHome}
+              className="hamburgerMenu paddingRight"
+            />
+            <br />
+            <span>Home</span>
+          </div>
           <br />
-          <FontAwesomeIcon
-            icon={faUser}
-            className="hamburgerMenu paddingRight"
-          />
-          <span>My profile</span>
+          <div className="alignCenter pointerCursor">
+            <FontAwesomeIcon
+              icon={faUser}
+              className="hamburgerMenu paddingRight"
+            />
+            <br />
+            <span>My profile</span>
+          </div>
           <br />
-          <FontAwesomeIcon
-            icon={faMusic}
-            className="hamburgerMenu paddingRight"
-          />
-          <span>My playlists</span>
+          <div className="alignCenter pointerCursor">
+            <FontAwesomeIcon
+              icon={faMusic}
+              className="hamburgerMenu paddingRight"
+            />
+            <br />
+            <span>My playlists</span>
+          </div>
           <br />
-          <FontAwesomeIcon
-            icon={faStar}
-            className="hamburgerMenu paddingRight"
-          />
-          <span>My favorites</span>
-          <br />
+          <div className="alignCenter pointerCursor">
+            <FontAwesomeIcon
+              icon={faStar}
+              className="hamburgerMenu paddingRight"
+            />
+            <br />
+            <span>My favorites</span>
+          </div>
         </div>
         <div className="buttons paddingBottom">
           <button onClick={onLogOut}>Log out</button>
