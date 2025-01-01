@@ -18,8 +18,18 @@ export default function Navigation() {
 
   useEffect(() => {
     let token = window.localStorage.getItem("token");
-    setToken(token);
+    setToken(token || "");
   }, []);
+
+  const handleTokenUpdate = (newToken) => {
+    setToken(newToken);
+  };
+  
+  let handleLogOut = () => {
+    window.localStorage.removeItem("token");
+    setToken("");
+    setMenuClicked((prevState) => !prevState);
+  };
 
   return (
     <>
@@ -32,9 +42,9 @@ export default function Navigation() {
         />
       </nav>
       {menuClicked && token ? (
-        <SignedInUserMenu />
+        <SignedInUserMenu onLogOut={handleLogOut} />
       ) : menuClicked && !token ? (
-        <SignInRegister />
+        <SignInRegister onTokenUpdate = {handleTokenUpdate}/>
       ) : null}
     </>
   );

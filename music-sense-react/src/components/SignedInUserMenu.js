@@ -9,20 +9,13 @@ import {
   faHome,
 } from "@fortawesome/free-solid-svg-icons";
 
-export default function SignedInUserMenu() {
+export default function SignedInUserMenu({onLogOut}) {
   let [menuClicked, setMenuClicked] = useState(true);
 
   let [token, setToken] = useState("");
 
   let handleSidebarMenu = () => {
     setMenuClicked((prevState) => !prevState);
-  };
-
-  let handleLogOut = () => {
-    setToken("");
-    window.localStorage.removeItem("token");
-    setMenuClicked((prevState) => !prevState);
-    window.location.reload();
   };
 
   if (menuClicked) {
@@ -63,7 +56,7 @@ export default function SignedInUserMenu() {
           <br />
         </div>
         <div className="buttons paddingBottom">
-          <button onClick={handleLogOut}>Log out</button>
+          <button onClick={onLogOut}>Log out</button>
         </div>
       </section>
     );

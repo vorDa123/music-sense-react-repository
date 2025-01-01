@@ -4,31 +4,33 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 
-export default function SignInRegister() {
+export default function SignInRegister({onTokenUpdate}) {
   const CLIENT_ID = "727a7c097cfb4ec4997132e3824c3a6d";
   const CLIENT_SECRET = "96548f701f594b1b980d1d33ef2fd04b";
   const SPOTIFY_AUTHORIZE_ENDPOINT = "https://accounts.spotify.com/authorize";
   const REDIRECT_URI_AFTER_LOGIN = "http://localhost:3000";
 
   let [menuClicked, setMenuClicked] = useState(true);
-  let [token, setToken] = useState("");
-  
+
   let handleSidebarMenu = () => {
     setMenuClicked((prevState) => !prevState);
-  };  
-  
+  };
+
   useEffect(() => {
     const hash = window.location.hash;
     let token = window.localStorage.getItem("token");
 
     if (!token && hash) {
-      token = hash.substring(1).split("&").find(elem => elem.startsWith("access_token")).split("=")[1];
+      token = hash
+        .substring(1)
+        .split("&")
+        .find((elem) => elem.startsWith("access_token"))
+        .split("=")[1];
       window.location.hash = "";
       window.localStorage.setItem("token", token);
-      window.location.reload();
+      onTokenUpdate(token);
     }
-    setToken(token);
-  }, []);
+  }, [onTokenUpdate]);
 
   const handleLogin = () => {
     window.location = `${SPOTIFY_AUTHORIZE_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI_AFTER_LOGIN}&response_type=token&show_dialog=true`;
@@ -62,7 +64,6 @@ export default function SignInRegister() {
         </section>
       </>
     );
-  } else {
-    return <></>;
   }
+  return null;
 }
