@@ -16,7 +16,7 @@ export default function Navigation({token, onTokenUpdate}) {
   };
   
   let handleLogOut = () => {
-    window.localStorage.removeItem("token");
+    window.sessionStorage.removeItem("token");
     onTokenUpdate("");
     setMenuClicked((prevState) => !prevState);
   };

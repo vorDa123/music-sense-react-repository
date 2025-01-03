@@ -15,13 +15,13 @@ function App() {
 
   useEffect(() => {
     // Load token from localStorage when the app starts
-    const storedToken = window.localStorage.getItem("token");
+    const storedToken = window.sessionStorage.getItem("token");
     setToken(storedToken || "");
   }, []);
 
   useEffect(() => {
     const hash = window.location.hash;
-    let token = window.localStorage.getItem("token");
+    let token = window.sessionStorage.getItem("token");
 
     if (!token && hash) {
       const tokenFromHash = hash
@@ -30,7 +30,7 @@ function App() {
         .find((elem) => elem.startsWith("access_token"))
         .split("=")[1];
       if (tokenFromHash) {
-        window.localStorage.setItem("token", tokenFromHash);
+        window.sessionStorage.setItem("token", tokenFromHash);
         setToken(tokenFromHash);
       }
       window.location.hash = "";
@@ -43,9 +43,9 @@ function App() {
     // Update the token state when it changes
     setToken(newToken);
     if (newToken) {
-      window.localStorage.setItem("token", newToken);
+      window.sessionStorage.setItem("token", newToken);
     } else {
-      window.localStorage.removeItem("token");
+      window.sessionStorage.removeItem("token");
     }
   };
 
