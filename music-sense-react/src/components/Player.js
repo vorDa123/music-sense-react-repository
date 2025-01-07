@@ -9,18 +9,18 @@ import {
   faPause,
 } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faRegStar } from "@fortawesome/free-regular-svg-icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Player({ token, player, currentSong }) {
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const handlePlaySong = () => {
     if (!currentSong?.uri) {
       console.error("currentSong.uri is undefined");
       return;
     }
-    console.log("Playing song:", currentSong.external_urls.spotify);
-    player.src = currentSong.external_urls.spotify;
+    console.log("Playing song:", currentSong.uri);
+    player.src = currentSong.uri;
     player.play();
     setIsPlaying((prevState) => !prevState);
   };
@@ -28,6 +28,35 @@ export default function Player({ token, player, currentSong }) {
   const handlePauseSong = () => {
     player.pause();
     setIsPlaying((prevState) => !prevState);
+  };
+
+  const handleTogglePlay = () => {
+    if (player) {
+      player.togglePlay(); // Use togglePlay to switch between play and pause
+      setIsPlaying((prev) => !prev); // Toggle the isPlaying state
+    }
+  };
+
+  // useEffect(() => {
+  //   if (currentSong?.uri) {
+  //     player.play({
+  //       uris: [currentSong.uri], // Play the new song by its URI
+  //     }).then(() => {
+  //       setIsPlaying(true); // Make sure the song is playing
+  //     }).catch(error => {
+  //       console.error("Error playing the track:", error);
+  //     });
+  //   }
+  // }, [currentSong, player]);
+
+  const handlePlayPause = () => {
+    if (isPlaying) {
+      player.pause(); // Pause the track if it's currently playing
+      setIsPlaying(false); // Update the state to paused
+    } else {
+      player.resume(); // Resume the track if it's currently paused
+      setIsPlaying(true); // Update the state to playing
+    }
   };
 
   return (
@@ -38,7 +67,6 @@ export default function Player({ token, player, currentSong }) {
           <div
             className="labelImage"
             style={{
-              backgroundImage: `url( ${currentSong.album.images[0].url} )`,
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
               backgroundSize: "cover",
@@ -74,13 +102,13 @@ export default function Player({ token, player, currentSong }) {
             <FontAwesomeIcon
               icon={faPlay}
               className="playerIcon"
-              onClick={handlePlaySong}
+              onClick={handleTogglePlay}
             />
           ) : (
             <FontAwesomeIcon
               icon={faPause}
               className="playerIcon"
-              onClick={handlePauseSong}
+              onClick={handleTogglePlay}
             />
           )}
           <FontAwesomeIcon icon={faForwardStep} className="playerIcon" />

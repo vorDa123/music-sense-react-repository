@@ -10,7 +10,7 @@ export default function SignInRegister({onTokenUpdate}) {
   const SPOTIFY_AUTHORIZE_ENDPOINT = "https://accounts.spotify.com/authorize";
   const REDIRECT_URI_AFTER_LOGIN = "http://localhost:3000";
   const SPACE_DELIMITER = "%20";
-  const SCOPES = ["user-read-currently-playing", "user-read-playback-state", "playlist-read-private", "playlist-read-collaborative"];
+  const SCOPES = ["user-read-currently-playing", "user-read-playback-state", "playlist-read-private", "playlist-read-collaborative", "user-modify-playback-state", "streaming", "app-remote-control", "user-read-private", "user-read-email"];
   const SCOPES_URL_PARAM = SCOPES.join(SPACE_DELIMITER);
 
   let [menuClicked, setMenuClicked] = useState(true);

@@ -234,6 +234,8 @@ nav {
 .songNameInQueue {
   font-size: 1.4rem;
   font-weight: 600;
+  display: inline-block;
+  overflow: auto;
 }
 
 .playListsList {
@@ -314,7 +316,7 @@ footer {
   gap: 10px;
 }
 
-.buttons button{
+.buttons button {
   background-color: #ffe204;
   border-style: none;
   text-align: center;
@@ -342,19 +344,19 @@ footer {
   gap: 10px;
 }
 
-.menuList span{
+.menuList span {
   font-size: 1.2rem;
   font-weight: 500;
 }
 
-.paddingBottom{
+.paddingBottom {
   padding-bottom: 20px;
 }
 
-.alignCenter{
+.alignCenter {
   text-align: center;
 }
 
-.pointerCursor{
+.pointerCursor {
   cursor: pointer;
 }
