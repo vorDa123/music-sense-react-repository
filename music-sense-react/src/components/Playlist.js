@@ -1,6 +1,11 @@
 import "App.css";
+import { usePlaylist } from "../PlaylistProvider";
 
 export default function Playlist({ playlistId, playlistName, playlistImage }) {
+  const { setPlaylistId } = usePlaylist();
+  const handleCardClick = () => {
+    setPlaylistId(playlistId);
+  };
   return (
     <div
       className="playlist"
@@ -12,6 +17,7 @@ export default function Playlist({ playlistId, playlistName, playlistImage }) {
         backgroundSize: "cover",
         cursor: "pointer",
       }}
+      onClick={handleCardClick}
     >
       <div
         style={{

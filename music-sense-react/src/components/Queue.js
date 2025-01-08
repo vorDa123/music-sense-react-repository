@@ -3,7 +3,7 @@ import "App.css";
 //Components
 import QueueSong from "components/QueueSong.js";
 
-export default function Queue({ token, queueSongs, loading }) {
+export default function Queue({ token, queueSongs, loading, playlistID }) {
   let defaultQueueSongs = [
     {
       id: 1,
@@ -36,12 +36,12 @@ export default function Queue({ token, queueSongs, loading }) {
       <article className="inQueueSection">
         <h1 className="title">In queue</h1>
         <div class="queueList">
-          {queueSongs.slice(0, 5).map((queueSong) => (
+          {queueSongs.slice(1, 6).map((queueSong) => (
             <QueueSong
-              queueSongId={queueSong.id}
-              queueSongName={queueSong.name}
-              queueSongArtist={queueSong.artists[0].name}
-              queueSongImage={queueSong.album.images[0].url}
+              queueSongId={queueSong.track?.id}
+              queueSongName={queueSong.track?.name}
+              queueSongArtist={queueSong.track?.artists[0].name}
+              queueSongImage={queueSong.track?.album.images[0].url}
             />
           ))}
         </div>

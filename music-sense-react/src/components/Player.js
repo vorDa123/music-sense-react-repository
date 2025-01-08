@@ -17,6 +17,8 @@ export default function Player({
   currentSong,
   pausePlayback,
   playSong,
+  queueSongs,
+  playlistID
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -25,7 +27,7 @@ export default function Player({
       pausePlayback();
       setIsPlaying(false);
     } else {
-      playSong(currentSong?.uri);
+      playSong(currentSong?.track?.uri);
       setIsPlaying(true);
     }
   };
@@ -49,11 +51,11 @@ export default function Player({
         <div className="songAndArtist">
           <FontAwesomeIcon icon={faRegStar} className="favoriteSongIcon" />
           <span className="songName">
-            {currentSong?.name || "Plave noći bez tebe"}
+            {currentSong?.track?.name || "Plave noći bez tebe"}
           </span>
           <br />
           <span className="artistName">
-            {currentSong?.artists?.[0]?.name || "Divlje Jagode"}
+            {currentSong?.track?.artists?.[0]?.name || "Divlje Jagode"}
           </span>
         </div>
         <div className="songLengthDuration">

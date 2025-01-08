@@ -1,6 +1,7 @@
 import "App.css";
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
+import { usePlaylist } from "../PlaylistProvider";
 
 //Components
 import Player from "components/Player.js";
@@ -14,6 +15,7 @@ export default function PlayerAndQueue({ token }) {
   const [spotifyPlayer, setSpotifyPlayer] = useState(null);
   const [isSdkReady, setIsSdkReady] = useState(false);
   const [deviceId, setDeviceId] = useState(null);
+  const { playlistId } = usePlaylist();
 
   const verifyToken = async (token) => {
     try {
@@ -35,6 +37,8 @@ export default function PlayerAndQueue({ token }) {
     }
   }, [token]);
 
+  console.log("Playlist ID in PlayerAndQueue:", playlistId);
+
   useEffect(() => {
     // Load Spotify Web Playback SDK
     const script = document.createElement("script");
@@ -55,12 +59,12 @@ export default function PlayerAndQueue({ token }) {
 
   useEffect(() => {
     const playerQueueFetch = async () => {
-      if (!token) return;
+      if (!token || !playlistId) return;
 
       try {
         setLoading(true);
         const { data } = await axios.get(
-          "https://api.spotify.com/v1/me/player/queue",
+          `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -68,8 +72,13 @@ export default function PlayerAndQueue({ token }) {
           }
         );
         console.log("Fetched queue:", data);
-        setCurrentSong(data.currently_playing);
-        setSongQueue(data.queue);
+        const currentlyPlaying = data.items[0];
+        const queue = data.items.slice(0, 6);
+
+        console.log("Initial fetch - Current Song:", currentlyPlaying);
+        console.log("Initial fetch - Queue:", queue);
+        setCurrentSong(currentlyPlaying);
+        setSongQueue(queue);
       } catch (error) {
         console.error("Error fetching queue:", error);
       } finally {
@@ -78,6 +87,23 @@ export default function PlayerAndQueue({ token }) {
     };
 
     playerQueueFetch();
+
+    const addToQueue = async (uri) => {
+      try {
+        const response = await axios.post(
+          `https://api.spotify.com/v1/me/player/queue?uri=${uri}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("Track added to queue:", response);
+      } catch (error) {
+        console.error("Error adding track to queue:", error);
+      }
+    };
 
     if (isSdkReady && token) {
       const player = new window.Spotify.Player({
@@ -93,8 +119,8 @@ export default function PlayerAndQueue({ token }) {
         console.log("Ready with Device ID:", device_id);
         setDeviceId(device_id);
       });
-      player.addListener('not_ready', ({ device_id }) => {
-        console.log('Device ID has gone offline', device_id);
+      player.addListener("not_ready", ({ device_id }) => {
+        console.log("Device ID has gone offline", device_id);
       });
 
       player.addListener("initialization_error", ({ message }) => {
@@ -114,11 +140,19 @@ export default function PlayerAndQueue({ token }) {
       });
 
       player.addListener("player_state_changed", (state) => {
-        console.log("Player state changed", state);
-        console.log("Current track:", state.track_window.current_track);
-        console.log("Next tracks:", state.track_window.next_tracks);
-        setCurrentSong(state.track_window.current_track);
-        setSongQueue(state.track_window.next_tracks);
+        if (!state || !state.track_window) {
+          console.error("Player state or track_window is null or undefined");
+          return; // Exit early if the state or track_window is not available
+        }
+        console.log("Player state changed:", state);
+        const currentTrack = state.track_window.current_track;
+        const nextTracks = state.track_window.next_tracks;
+
+        console.log("Current Track:", currentTrack);
+        console.log("Next Tracks:", nextTracks);
+
+        // setCurrentSong(currentTrack);
+        // setSongQueue(nextTracks);
       });
 
       player.connect().then((connected) => {
@@ -134,7 +168,7 @@ export default function PlayerAndQueue({ token }) {
         player.disconnect();
       };
     }
-  }, [isSdkReady, token]);
+  }, [isSdkReady, token, playlistId]);
 
   const playSong = async (uri) => {
     if (!deviceId) {
@@ -168,9 +202,21 @@ export default function PlayerAndQueue({ token }) {
 
   return (
     <section className="nowPlayingQueue">
-      <Player token={token} player={spotifyPlayer} currentSong={currentSong} playSong={playSong}
-        pausePlayback={pausePlayback} />
-      <Queue token={token} queueSongs={songQueue} loading={loading} />
+      <Player
+        token={token}
+        player={spotifyPlayer}
+        currentSong={currentSong}
+        queueSongs={songQueue}
+        playSong={playSong}
+        pausePlayback={pausePlayback}
+        playlistID={playlistId}
+      />
+      <Queue
+        token={token}
+        queueSongs={songQueue}
+        loading={loading}
+        playlistID={playlistId}
+      />
     </section>
   );
 }
