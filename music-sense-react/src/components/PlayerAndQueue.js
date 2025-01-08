@@ -13,6 +13,8 @@ export default function PlayerAndQueue({ token }) {
   const [loading, setLoading] = useState(true);
   const [spotifyPlayer, setSpotifyPlayer] = useState(null);
   const [isSdkReady, setIsSdkReady] = useState(false);
+  const [deviceId, setDeviceId] = useState(null);
+
   const verifyToken = async (token) => {
     try {
       const response = await axios.get("https://api.spotify.com/v1/me", {
@@ -89,6 +91,7 @@ export default function PlayerAndQueue({ token }) {
       console.log("isSdkReady:", isSdkReady);
       player.addListener("ready", ({ device_id }) => {
         console.log("Ready with Device ID:", device_id);
+        setDeviceId(device_id);
       });
       player.addListener('not_ready', ({ device_id }) => {
         console.log('Device ID has gone offline', device_id);
@@ -133,9 +136,40 @@ export default function PlayerAndQueue({ token }) {
     }
   }, [isSdkReady, token]);
 
+  const playSong = async (uri) => {
+    if (!deviceId) {
+      console.error("Device ID is not set");
+      return;
+    }
+    try {
+      await axios.put(
+        `https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`,
+        { uris: [uri] }, // Specify the track URI
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      console.log("Playback started");
+    } catch (error) {
+      console.error("Error starting playback:", error.response?.data || error);
+    }
+  };
+
+  const pausePlayback = async () => {
+    try {
+      await axios.put(
+        `https://api.spotify.com/v1/me/player/pause`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      console.log("Playback paused");
+    } catch (error) {
+      console.error("Error pausing playback:", error.response?.data || error);
+    }
+  };
+
   return (
     <section className="nowPlayingQueue">
-      <Player token={token} player={spotifyPlayer} currentSong={currentSong} />
+      <Player token={token} player={spotifyPlayer} currentSong={currentSong} playSong={playSong}
+        pausePlayback={pausePlayback} />
       <Queue token={token} queueSongs={songQueue} loading={loading} />
     </section>
   );

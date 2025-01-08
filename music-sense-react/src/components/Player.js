@@ -11,51 +11,22 @@ import {
 import { faStar as faRegStar } from "@fortawesome/free-regular-svg-icons";
 import { useState, useEffect } from "react";
 
-export default function Player({ token, player, currentSong }) {
+export default function Player({
+  token,
+  player,
+  currentSong,
+  pausePlayback,
+  playSong,
+}) {
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const handlePlaySong = () => {
-    if (!currentSong?.uri) {
-      console.error("currentSong.uri is undefined");
-      return;
-    }
-    console.log("Playing song:", currentSong.uri);
-    player.src = currentSong.uri;
-    player.play();
-    setIsPlaying((prevState) => !prevState);
-  };
-
-  const handlePauseSong = () => {
-    player.pause();
-    setIsPlaying((prevState) => !prevState);
-  };
-
   const handleTogglePlay = () => {
-    if (player) {
-      player.togglePlay(); // Use togglePlay to switch between play and pause
-      setIsPlaying((prev) => !prev); // Toggle the isPlaying state
-    }
-  };
-
-  // useEffect(() => {
-  //   if (currentSong?.uri) {
-  //     player.play({
-  //       uris: [currentSong.uri], // Play the new song by its URI
-  //     }).then(() => {
-  //       setIsPlaying(true); // Make sure the song is playing
-  //     }).catch(error => {
-  //       console.error("Error playing the track:", error);
-  //     });
-  //   }
-  // }, [currentSong, player]);
-
-  const handlePlayPause = () => {
     if (isPlaying) {
-      player.pause(); // Pause the track if it's currently playing
-      setIsPlaying(false); // Update the state to paused
+      pausePlayback();
+      setIsPlaying(false);
     } else {
-      player.resume(); // Resume the track if it's currently paused
-      setIsPlaying(true); // Update the state to playing
+      playSong(currentSong?.uri);
+      setIsPlaying(true);
     }
   };
 
@@ -100,13 +71,13 @@ export default function Player({ token, player, currentSong }) {
           />
           {isPlaying ? (
             <FontAwesomeIcon
-              icon={faPlay}
+              icon={faPause}
               className="playerIcon"
               onClick={handleTogglePlay}
             />
           ) : (
             <FontAwesomeIcon
-              icon={faPause}
+              icon={faPlay}
               className="playerIcon"
               onClick={handleTogglePlay}
             />
