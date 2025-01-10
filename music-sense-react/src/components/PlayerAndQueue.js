@@ -99,12 +99,6 @@ export default function PlayerAndQueue({ token }) {
         console.log("Initial fetch - Queue:", queue);
         setCurrentSong(currentlyPlaying);
         setSongQueue(queue);
-
-        // Add each song in queueWithRandomSongs to Spotify's playback queue
-        for (const song of queueWithRandomSongs) {
-          const songUri = song.track.uri;
-          await addToQueue(songUri); // Add track to Spotify queue
-        }
       } catch (error) {
         console.error("Error fetching queue:", error);
       } finally {
@@ -114,20 +108,50 @@ export default function PlayerAndQueue({ token }) {
 
     playerQueueFetch();
 
-    const addToQueue = async (uri) => {
+    const fetchDevices = async () => {
       try {
-        await axios.post(
-          `https://api.spotify.com/v1/me/player/queue?uri=${uri}`,
-          null,
+        const response = await axios.get(
+          "https://api.spotify.com/v1/me/player/devices",
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }
         );
-        console.log("Track added to queue:", uri);
+        console.log("Available devices:", response.data.devices);
       } catch (error) {
-        console.error("Error adding track to queue:", error);
+        console.error(
+          "Error fetching devices:",
+          error.response ? error.response.data : error.message
+        );
+      }
+    };
+
+    // Call fetchDevices to check the available devices
+    fetchDevices();
+
+    const addToQueue = async (uri) => {
+      try {
+        console.log("Adding to queue with device_id:", deviceId);
+        const response = await axios.post(
+          `https://api.spotify.com/v1/me/player/queue`,
+          "",
+          {
+            params: {
+              uri: uri,
+              device_id: deviceId,
+            },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("Track added to queue:", response);
+      } catch (error) {
+        console.error(
+          "Error adding track to queue:",
+          error.response ? error.response.data : error.message
+        );
       }
     };
 
@@ -144,6 +168,42 @@ export default function PlayerAndQueue({ token }) {
       player.addListener("ready", ({ device_id }) => {
         console.log("Ready with Device ID:", device_id);
         setDeviceId(device_id);
+        console.log("Fetched queue:", songQueue);
+        // Ensure the device is active before adding tracks to the queue
+        const checkDeviceState = async () => {
+          try {
+            const response = await axios.get(
+              "https://api.spotify.com/v1/me/player",
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            if (
+              response.data &&
+              response.data.device &&
+              response.data.device.id === device_id
+            ) {
+              console.log("Device is active:", response.data.device);
+              // Add each song in songQueue to Spotify's playback queue
+              for (const song of songQueue) {
+                const songUri = song.track.uri;
+                console.log("Adding song to queue:", songUri); // Log the song URI
+                addToQueue(songUri); // Add track to Spotify queue
+              }
+            } else {
+              console.error("Device is not active or not found");
+            }
+          } catch (error) {
+            console.error(
+              "Error checking device state:",
+              error.response ? error.response.data : error.message
+            );
+          }
+        };
+
+        checkDeviceState();
       });
       player.addListener("not_ready", ({ device_id }) => {
         console.log("Device ID has gone offline", device_id);
