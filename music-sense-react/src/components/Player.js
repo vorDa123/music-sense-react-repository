@@ -18,7 +18,7 @@ export default function Player({
   pausePlayback,
   playSong,
   queueSongs,
-  playlistID
+  playlistID,
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -32,6 +32,21 @@ export default function Player({
     }
   };
 
+  const songDuration = currentSong?.track?.duration_ms;
+
+  const formattedDuration = () => {
+    console.log("Song Duration:", songDuration); // Debug log
+    if (!songDuration) return "0:00";
+    const totalSeconds = Math.floor(songDuration / 1000); // Convert to seconds
+    const minutes = Math.floor(totalSeconds / 60); // Get whole minutes
+    const seconds = totalSeconds % 60; // Get remaining seconds
+
+    // Format the result to ensure seconds are always two digits (e.g., "01", "09")
+    const formattedSeconds = seconds.toString().padStart(2, "0");
+
+    return `${minutes}:${formattedSeconds}`;
+  };
+
   return (
     <article className="nowPlayingSection">
       <h1 className="title">Now playing</h1>
@@ -39,11 +54,16 @@ export default function Player({
         <div className="record">
           <div
             className="labelImage"
-            style={{
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-            }}
+            style={
+              currentSong?.track?.album?.images[0]?.url
+                ? {
+                    backgroundImage: `url(${currentSong?.track?.album?.images[0]?.url})`,
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "cover",
+                  }
+                : {}
+            }
           >
             <div className="label"></div>
           </div>
@@ -62,7 +82,7 @@ export default function Player({
           <div className="songLength">
             <div className="songLengthPoint"></div>
           </div>
-          <span className="songDuration">3:45</span>
+          <span className="songDuration">{formattedDuration()}</span>
         </div>
         <div className="playerControls">
           <FontAwesomeIcon icon={faShuffle} className="playerIcon" />

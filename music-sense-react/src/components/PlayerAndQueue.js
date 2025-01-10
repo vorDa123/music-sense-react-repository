@@ -17,6 +17,8 @@ export default function PlayerAndQueue({ token }) {
   const [deviceId, setDeviceId] = useState(null);
   const { playlistId } = usePlaylist();
 
+  const minimumSongIndex = 0;
+
   const verifyToken = async (token) => {
     try {
       const response = await axios.get("https://api.spotify.com/v1/me", {
@@ -72,13 +74,37 @@ export default function PlayerAndQueue({ token }) {
           }
         );
         console.log("Fetched queue:", data);
-        const currentlyPlaying = data.items[0];
-        const queue = data.items.slice(0, 6);
+        const numberOfSongs = data.items.length;
+        const randomNumberOfSong = Math.floor(
+          Math.random() * (numberOfSongs - minimumSongIndex) + minimumSongIndex
+        );
+
+        const queueWithRandomSongs = [];
+
+        for (let i = 0; i < 6; i++) {
+          const randomIndex = Math.floor(
+            Math.random() * (numberOfSongs - minimumSongIndex) +
+              minimumSongIndex
+          );
+          queueWithRandomSongs.push(data.items[randomIndex]);
+        }
+
+        console.log("Number of songs:", numberOfSongs);
+        console.log("Random song number is:", randomNumberOfSong);
+
+        const currentlyPlaying = data.items[randomNumberOfSong];
+        const queue = queueWithRandomSongs;
 
         console.log("Initial fetch - Current Song:", currentlyPlaying);
         console.log("Initial fetch - Queue:", queue);
         setCurrentSong(currentlyPlaying);
         setSongQueue(queue);
+
+        // Add each song in queueWithRandomSongs to Spotify's playback queue
+        for (const song of queueWithRandomSongs) {
+          const songUri = song.track.uri;
+          await addToQueue(songUri); // Add track to Spotify queue
+        }
       } catch (error) {
         console.error("Error fetching queue:", error);
       } finally {
@@ -90,16 +116,16 @@ export default function PlayerAndQueue({ token }) {
 
     const addToQueue = async (uri) => {
       try {
-        const response = await axios.post(
+        await axios.post(
           `https://api.spotify.com/v1/me/player/queue?uri=${uri}`,
-          {},
+          null,
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }
         );
-        console.log("Track added to queue:", response);
+        console.log("Track added to queue:", uri);
       } catch (error) {
         console.error("Error adding track to queue:", error);
       }
@@ -146,13 +172,10 @@ export default function PlayerAndQueue({ token }) {
         }
         console.log("Player state changed:", state);
         const currentTrack = state.track_window.current_track;
-        const nextTracks = state.track_window.next_tracks;
+        const nextTracks = state.track_window.next_tracks || [];
 
         console.log("Current Track:", currentTrack);
         console.log("Next Tracks:", nextTracks);
-
-        // setCurrentSong(currentTrack);
-        // setSongQueue(nextTracks);
       });
 
       player.connect().then((connected) => {
