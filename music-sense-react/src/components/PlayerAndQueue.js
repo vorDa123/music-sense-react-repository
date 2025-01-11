@@ -2,6 +2,7 @@ import "App.css";
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import { usePlaylist } from "../PlaylistProvider";
+import { SongIsPlaying } from "../SongIsPlayingContext";
 
 //Components
 import Player from "components/Player.js";
@@ -75,9 +76,6 @@ export default function PlayerAndQueue({ token }) {
         );
         console.log("Fetched queue:", data);
         const numberOfSongs = data.items.length;
-        const randomNumberOfSong = Math.floor(
-          Math.random() * (numberOfSongs - minimumSongIndex) + minimumSongIndex
-        );
 
         const queueWithRandomSongs = [];
 
@@ -90,15 +88,13 @@ export default function PlayerAndQueue({ token }) {
         }
 
         console.log("Number of songs:", numberOfSongs);
-        console.log("Random song number is:", randomNumberOfSong);
 
-        const currentlyPlaying = data.items[randomNumberOfSong];
         const queue = queueWithRandomSongs;
 
-        console.log("Initial fetch - Current Song:", currentlyPlaying);
+        console.log("Initial fetch - Current Song:", queue[0]);
         console.log("Initial fetch - Queue:", queue);
-        setCurrentSong(currentlyPlaying);
-        setSongQueue(queue);
+        setCurrentSong(queue[0]);
+        setSongQueue(queue.slice(0));
       } catch (error) {
         console.error("Error fetching queue:", error);
       } finally {
@@ -129,31 +125,6 @@ export default function PlayerAndQueue({ token }) {
 
     // Call fetchDevices to check the available devices
     fetchDevices();
-
-    const addToQueue = async (uri) => {
-      try {
-        console.log("Adding to queue with device_id:", deviceId);
-        const response = await axios.post(
-          `https://api.spotify.com/v1/me/player/queue`,
-          "",
-          {
-            params: {
-              uri: uri,
-              device_id: deviceId,
-            },
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log("Track added to queue:", response);
-      } catch (error) {
-        console.error(
-          "Error adding track to queue:",
-          error.response ? error.response.data : error.message
-        );
-      }
-    };
 
     if (isSdkReady && token) {
       const player = new window.Spotify.Player({
@@ -186,12 +157,6 @@ export default function PlayerAndQueue({ token }) {
               response.data.device.id === device_id
             ) {
               console.log("Device is active:", response.data.device);
-              // Add each song in songQueue to Spotify's playback queue
-              for (const song of songQueue) {
-                const songUri = song.track.uri;
-                console.log("Adding song to queue:", songUri); // Log the song URI
-                addToQueue(songUri); // Add track to Spotify queue
-              }
             } else {
               console.error("Device is not active or not found");
             }
@@ -236,6 +201,8 @@ export default function PlayerAndQueue({ token }) {
 
         console.log("Current Track:", currentTrack);
         console.log("Next Tracks:", nextTracks);
+        setCurrentSong(currentTrack);
+        setSongQueue(nextTracks);
       });
 
       player.connect().then((connected) => {
@@ -283,23 +250,92 @@ export default function PlayerAndQueue({ token }) {
     }
   };
 
+  const repeatPlayback = async () => {
+    try {
+      await axios.put(
+        `https://api.spotify.com/v1/me/player/repeat`,
+        {},
+        {
+          params: {
+            state: "track",
+          },
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      console.log("Playback on repeat");
+    } catch (error) {
+      console.error("Error repeating playback:", error.response?.data || error);
+    }
+  };
+
+  const cancelRepeatPlayback = async () => {
+    try {
+      await axios.put(
+        `https://api.spotify.com/v1/me/player/repeat`,
+        {},
+        {
+          params: {
+            state: "off",
+          },
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      console.log("Repeat cancelled");
+    } catch (error) {
+      console.error("Error cancelling repeat:", error.response?.data || error);
+    }
+  };
+
+  const addToQueue = async (uri, device_id) => {
+    try {
+      console.log("Adding to queue with device_id:", deviceId);
+      const response = await axios.post(
+        `https://api.spotify.com/v1/me/player/queue`,
+        "",
+        {
+          params: {
+            uri: uri,
+            device_id: device_id,
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Track added to queue:", response);
+    } catch (error) {
+      console.error(
+        "Error adding track to queue:",
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
+
   return (
     <section className="nowPlayingQueue">
-      <Player
-        token={token}
-        player={spotifyPlayer}
-        currentSong={currentSong}
-        queueSongs={songQueue}
-        playSong={playSong}
-        pausePlayback={pausePlayback}
-        playlistID={playlistId}
-      />
-      <Queue
-        token={token}
-        queueSongs={songQueue}
-        loading={loading}
-        playlistID={playlistId}
-      />
+      <SongIsPlaying>
+        <Player
+          token={token}
+          player={spotifyPlayer}
+          currentSong={currentSong}
+          queueSongs={songQueue}
+          playSong={playSong}
+          pausePlayback={pausePlayback}
+          repeatPlayback={repeatPlayback}
+          cancelRepeat={cancelRepeatPlayback}
+          playlistID={playlistId}
+          deviceId={deviceId}
+          addSongsToQueue={addToQueue}
+          isSdkReady={isSdkReady}
+        />
+        <Queue
+          token={token}
+          queueSongs={songQueue}
+          loading={loading}
+          playlistID={playlistId}
+          isSdkReady={isSdkReady}
+        />
+      </SongIsPlaying>
     </section>
   );
 }

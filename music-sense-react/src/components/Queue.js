@@ -1,9 +1,18 @@
 import "App.css";
+import axios from "axios";
+import { useEffect, useState, useRef } from "react";
+import { useSongIsPlaying } from "../SongIsPlayingContext";
 
 //Components
 import QueueSong from "components/QueueSong.js";
 
-export default function Queue({ token, queueSongs, loading, playlistID }) {
+export default function Queue({
+  token,
+  queueSongs,
+  loading,
+  playlistID,
+  isSdkReady,
+}) {
   let defaultQueueSongs = [
     {
       id: 1,
@@ -31,7 +40,69 @@ export default function Queue({ token, queueSongs, loading, playlistID }) {
       artist: "Divlje Jagode",
     },
   ];
-  if (token && defaultQueueSongs.length > 0 && !loading) {
+
+  const [playerQueue, setPlayerQueue] = useState([]);
+  const { playing, setPlaying } = useSongIsPlaying();
+  const hasFetchedQueue = useRef(false); // Track if queue fetch has been triggered
+
+  console.log("Queue: isPlaying =", playing);
+  const playerQueueFetch = async () => {
+    if (!token) return;
+
+    try {
+      const { data } = await axios.get(
+        `https://api.spotify.com/v1/me/player/queue`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Fetched player queue:", data);
+
+      setPlayerQueue(data.queue);
+    } catch (error) {
+      if (error.response?.status === 429) {
+        const retryAfter = error.response.headers["retry-after"];
+        console.log(`Rate limit exceeded. Retrying after ${retryAfter} seconds.`);
+        setTimeout(playerQueueFetch, retryAfter * 1000); // Retry after the suggested time
+      } else {
+        console.error("Error fetching queue:", error.response?.data || error.message);
+      }
+    }
+  };
+
+  useEffect(() => {
+    console.log("useEffect triggered: setPlaying =", setPlaying);
+    if (setPlaying && !hasFetchedQueue.current) {
+      console.log("Fetching player queue...");
+      hasFetchedQueue.current = true; // Mark as fetched
+      playerQueueFetch();
+      setTimeout(() => {
+        console.log("Resetting setPlaying and fetch tracking");
+        setPlaying(false); // Reset setPlaying to avoid endless loop
+        hasFetchedQueue.current = false; // Reset fetch tracking for future calls
+      }, 10000); // Adjust delay as needed
+    }
+  }, [playing, token]); // Run effect when setPlaying or token changes
+
+  if (token && isSdkReady && playerQueue.length > 0) {
+    return (
+      <article className="inQueueSection">
+        <h1 className="title">In queue</h1>
+        <div class="queueList">
+          {playerQueue.slice(0, 5).map((playerQueueSong) => (
+            <QueueSong
+              queueSongId={playerQueueSong.id}
+              queueSongName={playerQueueSong.name}
+              queueSongArtist={playerQueueSong.artists[0].name}
+              queueSongImage={playerQueueSong.album.images[0].url}
+            />
+          ))}
+        </div>
+      </article>
+    );
+  } else if (token && defaultQueueSongs.length > 0 && !loading) {
     return (
       <article className="inQueueSection">
         <h1 className="title">In queue</h1>
