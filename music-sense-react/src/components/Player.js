@@ -28,21 +28,30 @@ export default function Player({
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isRepeat, setIsRepeat] = useState(false);
+  const [addedToFavorites, setAddedToFavorites] = useState(false);
   const { setPlaying } = useSongIsPlaying();
 
   const handleTogglePlay = () => {
     if (isPlaying) {
-      pausePlayback();
+      try {
+        pausePlayback();
+      } catch {
+        player.togglePlay();
+      }
       setIsPlaying(false);
       setPlaying(false);
     } else {
       const songToPlay = currentSong?.track?.uri;
-      playSong(songToPlay);
-      // Add each song in songQueue to Spotify's playback queue
-      for (const song of queueSongs) {
-        const songUri = song.track.uri;
-        console.log("Adding song to queue:", songUri); // Log the song URI
-        addSongsToQueue(songUri, deviceId); // Add track to Spotify queue
+      try {
+        playSong(songToPlay);
+        // Add each song in songQueue to Spotify's playback queue
+        for (const song of queueSongs) {
+          const songUri = song.track.uri;
+          console.log("Adding song to queue:", songUri); // Log the song URI
+          addSongsToQueue(songUri, deviceId); // Add track to Spotify queue
+        }
+      } catch {
+        player.togglePlay();
       }
       setIsPlaying(true);
       setPlaying(true);
@@ -60,6 +69,18 @@ export default function Player({
       repeatPlayback();
       setIsRepeat(true);
     }
+  };
+
+  const handlePlayNext = () => {
+    player.nextTrack();
+  };
+
+  const handlePlayPrevious = () => {
+    player.previousTrack();
+  };
+
+  const handleAddToFavorites = () => {
+    setAddedToFavorites((prevState) => !prevState);
   };
 
   const songDuration =
@@ -101,7 +122,19 @@ export default function Player({
             </div>
           </div>
           <div className="songAndArtist">
-            <FontAwesomeIcon icon={faRegStar} className="favoriteSongIcon" />
+            {addedToFavorites ? (
+              <FontAwesomeIcon
+                icon={faStar}
+                className="favoriteSongIcon"
+                onClick={handleAddToFavorites}
+              />
+            ) : (
+              <FontAwesomeIcon
+                icon={faRegStar}
+                className="favoriteSongIcon"
+                onClick={handleAddToFavorites}
+              />
+            )}
             <span className="songName">
               {currentSong?.name || "Plave noći bez tebe"}
             </span>
@@ -122,6 +155,7 @@ export default function Player({
               icon={faForwardStep}
               className="playerIcon"
               rotation={180}
+              onClick={handlePlayPrevious}
             />
             {isPlaying ? (
               <FontAwesomeIcon
@@ -136,7 +170,11 @@ export default function Player({
                 onClick={handleTogglePlay}
               />
             )}
-            <FontAwesomeIcon icon={faForwardStep} className="playerIcon" />
+            <FontAwesomeIcon
+              icon={faForwardStep}
+              className="playerIcon"
+              onClick={handlePlayNext}
+            />
             <FontAwesomeIcon
               icon={faRepeat}
               className="playerIcon"
