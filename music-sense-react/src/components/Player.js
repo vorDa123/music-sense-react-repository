@@ -31,7 +31,7 @@ export default function Player({
   const [addedToFavorites, setAddedToFavorites] = useState(false);
   const { setPlaying } = useSongIsPlaying();
 
-  const handleTogglePlay = () => {
+  const handleTogglePlay = async () => {
     if (isPlaying) {
       try {
         pausePlayback();
@@ -48,7 +48,7 @@ export default function Player({
         for (const song of queueSongs) {
           const songUri = song.track.uri;
           console.log("Adding song to queue:", songUri); // Log the song URI
-          addSongsToQueue(songUri, deviceId); // Add track to Spotify queue
+          await addSongsToQueue(songUri, deviceId); // Add track to Spotify queue
         }
       } catch {
         player.togglePlay();
