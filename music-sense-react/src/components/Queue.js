@@ -8,10 +8,14 @@ import QueueSong from "components/QueueSong.js";
 
 export default function Queue({
   token,
+  player,
+  pausePlayback,
+  playSong,
   queueSongs,
-  loading,
   playlistID,
+  deviceId,
   isSdkReady,
+  loading,
 }) {
   let defaultQueueSongs = [
     {
@@ -64,10 +68,15 @@ export default function Queue({
     } catch (error) {
       if (error.response?.status === 429) {
         const retryAfter = error.response.headers["retry-after"];
-        console.log(`Rate limit exceeded. Retrying after ${retryAfter} seconds.`);
+        console.log(
+          `Rate limit exceeded. Retrying after ${retryAfter} seconds.`
+        );
         setTimeout(playerQueueFetch, retryAfter * 1000); // Retry after the suggested time
       } else {
-        console.error("Error fetching queue:", error.response?.data || error.message);
+        console.error(
+          "Error fetching queue:",
+          error.response?.data || error.message
+        );
       }
     }
   };
@@ -97,6 +106,14 @@ export default function Queue({
               queueSongName={playerQueueSong.name}
               queueSongArtist={playerQueueSong.artists[0].name}
               queueSongImage={playerQueueSong.album.images[0].url}
+              queueSongUri={playerQueueSong.uri}
+              token={token}
+              player={player}
+              queueSongs={queueSongs}
+              playSong={playSong}
+              pausePlayback={pausePlayback}
+              deviceId={deviceId}
+              isSdkReady={isSdkReady}
             />
           ))}
         </div>
@@ -113,6 +130,14 @@ export default function Queue({
               queueSongName={queueSong.track?.name}
               queueSongArtist={queueSong.track?.artists[0].name}
               queueSongImage={queueSong.track?.album.images[0].url}
+              queueSongUri={queueSong.track?.uri}
+              token={token}
+              player={player}
+              queueSongs={queueSongs}
+              playSong={playSong}
+              pausePlayback={pausePlayback}
+              deviceId={deviceId}
+              isSdkReady={isSdkReady}
             />
           ))}
         </div>

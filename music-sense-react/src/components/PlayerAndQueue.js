@@ -330,10 +330,15 @@ export default function PlayerAndQueue({ token }) {
         />
         <Queue
           token={token}
+          player={spotifyPlayer}
+          currentSong={currentSong}
           queueSongs={songQueue}
-          loading={loading}
+          playSong={playSong}
+          pausePlayback={pausePlayback}
           playlistID={playlistId}
+          deviceId={deviceId}
           isSdkReady={isSdkReady}
+          loading={loading}
         />
       </SongIsPlaying>
     </section>

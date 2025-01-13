@@ -28,6 +28,7 @@ export default function Player({
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isRepeat, setIsRepeat] = useState(false);
+  const [isShuffle, setIsShuffle] = useState(false);
   const [addedToFavorites, setAddedToFavorites] = useState(false);
   const { setPlaying } = useSongIsPlaying();
 
@@ -71,6 +72,16 @@ export default function Player({
     }
   };
 
+  const handleToggleShuffle = () => {
+    if (isShuffle) {
+      console.log("Shuffle is off");
+      setIsShuffle(false);
+    } else {
+      console.log("Shuffle is on");
+      setIsShuffle(true);
+    }
+  };
+
   const handlePlayNext = () => {
     player.nextTrack();
   };
@@ -97,6 +108,19 @@ export default function Player({
     const formattedSeconds = seconds.toString().padStart(2, "0");
 
     return `${minutes}:${formattedSeconds}`;
+  };
+
+  const [value, setValue] = useState(0); // Initialize the slider value
+
+  const handleInput = (e) => {
+    setValue(e.target.value); // Update state with the slider value
+  };
+
+  const getBackgroundStyle = () => {
+    const percentage = (value / 100) * 100; // Calculate percentage for gradient
+    return {
+      background: `linear-gradient(to right, #ffe204 0%, #ffe204 ${percentage}%, #ffffff ${percentage}%, #ffffff 100%)`,
+    };
   };
 
   if (isSdkReady && isPlaying) {
@@ -144,13 +168,32 @@ export default function Player({
             </span>
           </div>
           <div className="songLengthDuration">
-            <div className="songLength">
-              <div className="songLengthPoint"></div>
-            </div>
+            <input
+              type="range"
+              id="slider"
+              className="songLength"
+              min={0}
+              max={100}
+              value={value}
+              onChange={handleInput}
+              style={getBackgroundStyle()}
+            ></input>
+            {/* <div className="songLengthPoint"></div> */}
             <span className="songDuration">{formattedDuration()}</span>
           </div>
           <div className="playerControls">
-            <FontAwesomeIcon icon={faShuffle} className="playerIcon" />
+            <FontAwesomeIcon
+              icon={faShuffle}
+              className="playerIcon"
+              style={
+                isShuffle
+                  ? {
+                      color: "#ffe204",
+                    }
+                  : {}
+              }
+              onClick={handleToggleShuffle}
+            />
             <FontAwesomeIcon
               icon={faForwardStep}
               className="playerIcon"
@@ -218,7 +261,19 @@ export default function Player({
             </div>
           </div>
           <div className="songAndArtist">
-            <FontAwesomeIcon icon={faRegStar} className="favoriteSongIcon" />
+            {addedToFavorites ? (
+              <FontAwesomeIcon
+                icon={faStar}
+                className="favoriteSongIcon"
+                onClick={handleAddToFavorites}
+              />
+            ) : (
+              <FontAwesomeIcon
+                icon={faRegStar}
+                className="favoriteSongIcon"
+                onClick={handleAddToFavorites}
+              />
+            )}
             <span className="songName">
               {currentSong?.track?.name ||
                 currentSong?.name ||
@@ -232,17 +287,36 @@ export default function Player({
             </span>
           </div>
           <div className="songLengthDuration">
-            <div className="songLength">
-              <div className="songLengthPoint"></div>
-            </div>
+            <input
+              type="range"
+              id="slider"
+              className="songLength"
+              min={0}
+              max={100}
+              value={value}
+              onChange={handleInput}
+              style={getBackgroundStyle()}
+            ></input>
             <span className="songDuration">{formattedDuration()}</span>
           </div>
           <div className="playerControls">
-            <FontAwesomeIcon icon={faShuffle} className="playerIcon" />
+            <FontAwesomeIcon
+              icon={faShuffle}
+              className="playerIcon"
+              style={
+                isShuffle
+                  ? {
+                      color: "#ffe204",
+                    }
+                  : {}
+              }
+              onClick={handleToggleShuffle}
+            />
             <FontAwesomeIcon
               icon={faForwardStep}
               className="playerIcon"
               rotation={180}
+              onClick={handlePlayPrevious}
             />
             {isPlaying ? (
               <FontAwesomeIcon
@@ -257,7 +331,11 @@ export default function Player({
                 onClick={handleTogglePlay}
               />
             )}
-            <FontAwesomeIcon icon={faForwardStep} className="playerIcon" />
+            <FontAwesomeIcon
+              icon={faForwardStep}
+              className="playerIcon"
+              onClick={handlePlayNext}
+            />
             <FontAwesomeIcon
               icon={faRepeat}
               className="playerIcon"

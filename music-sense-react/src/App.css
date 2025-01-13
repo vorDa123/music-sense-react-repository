@@ -172,6 +172,26 @@ nav {
   align-items: center;
 }
 
+input[type="range"] {
+  -webkit-appearance: none;
+  background-color: #ffffff;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  -webkit-appearance: none;
+  color: #ffe204;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  background: #ffe204;
+  border-radius: 50%;
+}
+
 .songLengthPoint {
   background-color: #ffffff;
   height: 15px;
@@ -182,6 +202,8 @@ nav {
 .songDuration {
   color: #ffffff;
   font-size: 1.1rem;
+  position: relative;
+  top: 3px;
 }
 
 .favoriteSongIcon {
