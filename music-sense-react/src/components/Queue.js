@@ -16,6 +16,8 @@ export default function Queue({
   deviceId,
   isSdkReady,
   loading,
+  currentSong,
+  songIsPlaying,
 }) {
   let defaultQueueSongs = [
     {
@@ -114,6 +116,8 @@ export default function Queue({
               pausePlayback={pausePlayback}
               deviceId={deviceId}
               isSdkReady={isSdkReady}
+              currentSong={currentSong}
+              songIsPlaying={songIsPlaying}
             />
           ))}
         </div>
@@ -138,6 +142,8 @@ export default function Queue({
               pausePlayback={pausePlayback}
               deviceId={deviceId}
               isSdkReady={isSdkReady}
+              currentSong={currentSong}
+              songIsPlaying={songIsPlaying}
             />
           ))}
         </div>

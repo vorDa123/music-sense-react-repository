@@ -13,12 +13,14 @@ export default function Queue({
   player,
   pausePlayback,
   playSong,
+  currentSong,
+  songIsPlaying,
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const { setPlaying } = useSongIsPlaying();
+  const { playing, setPlaying } = useSongIsPlaying();
 
   const handleTogglePlay = async () => {
-    if (isPlaying) {
+    if (playing) {
       try {
         pausePlayback();
       } catch {
@@ -56,7 +58,7 @@ export default function Queue({
           {queueSongArtist || "Divlje Jagode"}
         </span>
       </div>
-      {isPlaying ? (
+      {songIsPlaying && queueSongId == currentSong.id ? (
         <FontAwesomeIcon
           icon={faPause}
           className="playIconQueue"

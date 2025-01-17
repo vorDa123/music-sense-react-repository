@@ -11,9 +11,9 @@ import {
 import { faStar as faRegStar } from "@fortawesome/free-regular-svg-icons";
 import { useState, useEffect, useRef } from "react";
 import { useSongIsPlaying } from "../SongIsPlayingContext";
+import { motion, useAnimation } from "motion/react";
 
 export default function Player({
-  token,
   player,
   currentSong,
   pausePlayback,
@@ -21,19 +21,21 @@ export default function Player({
   repeatPlayback,
   cancelRepeat,
   queueSongs,
-  playlistID,
   addSongsToQueue,
   deviceId,
   isSdkReady,
+  songIsPlaying,
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isRepeat, setIsRepeat] = useState(false);
   const [isShuffle, setIsShuffle] = useState(false);
   const [addedToFavorites, setAddedToFavorites] = useState(false);
-  const { setPlaying } = useSongIsPlaying();
+  const { playing, setPlaying } = useSongIsPlaying();
+  const vinylControls = useAnimation();
+  const currentRotation = useRef(0);
 
   const handleTogglePlay = async () => {
-    if (isPlaying) {
+    if (playing) {
       try {
         pausePlayback();
       } catch {
@@ -59,6 +61,10 @@ export default function Player({
       console.log("setPlaying set to true");
     }
   };
+
+  useEffect(() => {
+    console.log("Playing state from context:", playing);
+  }, [playing]);
 
   const handleToggleRepeat = () => {
     if (isRepeat) {
@@ -123,12 +129,37 @@ export default function Player({
     };
   };
 
-  if (isSdkReady && isPlaying) {
+  useEffect(() => {
+    if (songIsPlaying) {
+      // Start looping rotation
+      vinylControls.start({
+        rotate: [currentRotation.current, currentRotation.current + 360],
+        transition: {
+          duration: 5, // Time for one full rotation (adjust as needed)
+          ease: "linear",
+          repeat: Infinity, // Loop indefinitely
+        },
+      });
+    } else {
+      // Stop the rotation
+      vinylControls.stop();
+    }
+  }, [songIsPlaying, vinylControls]);
+
+  const handleUpdate = (latest) => {
+    currentRotation.current = latest.rotate % 360; // Keep track of the rotation value
+  };
+
+  if (isSdkReady && playing) {
     return (
       <article className="nowPlayingSection">
         <h1 className="title">Now playing</h1>
         <div className="centering">
-          <div className="record">
+          <motion.div
+            className="record"
+            animate={vinylControls}
+            onUpdate={handleUpdate}
+          >
             <div
               className="labelImage"
               style={
@@ -144,7 +175,7 @@ export default function Player({
             >
               <div className="label"></div>
             </div>
-          </div>
+          </motion.div>
           <div className="songAndArtist">
             {addedToFavorites ? (
               <FontAwesomeIcon
@@ -199,7 +230,7 @@ export default function Player({
               rotation={180}
               onClick={handlePlayPrevious}
             />
-            {isPlaying ? (
+            {songIsPlaying ? (
               <FontAwesomeIcon
                 icon={faPause}
                 className="playerIcon"
@@ -238,7 +269,7 @@ export default function Player({
       <article className="nowPlayingSection">
         <h1 className="title">Now playing</h1>
         <div className="centering">
-          <div className="record">
+          <motion.div className="record" animate={vinylControls}>
             <div
               className="labelImage"
               style={
@@ -258,7 +289,7 @@ export default function Player({
             >
               <div className="label"></div>
             </div>
-          </div>
+          </motion.div>
           <div className="songAndArtist">
             {addedToFavorites ? (
               <FontAwesomeIcon
@@ -317,7 +348,7 @@ export default function Player({
               rotation={180}
               onClick={handlePlayPrevious}
             />
-            {isPlaying ? (
+            {songIsPlaying ? (
               <FontAwesomeIcon
                 icon={faPause}
                 className="playerIcon"

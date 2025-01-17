@@ -17,6 +17,7 @@ export default function PlayerAndQueue({ token }) {
   const [isSdkReady, setIsSdkReady] = useState(false);
   const [deviceId, setDeviceId] = useState(null);
   const { playlistId } = usePlaylist();
+  const [songIsPlaying, setSongIsPlaying] = useState(false);
 
   const minimumSongIndex = 0;
 
@@ -39,6 +40,24 @@ export default function PlayerAndQueue({ token }) {
       verifyToken(token);
     }
   }, [token]);
+
+  useEffect(() => {
+    const handlePlayerStateChange = (state) => {
+      if (!state) return; // Handle disconnected state
+      const isCurrentlyPlaying = !state.paused;
+      setSongIsPlaying(isCurrentlyPlaying); // Update context state
+    };
+  
+    if (spotifyPlayer) {
+      spotifyPlayer.addListener("player_state_changed", handlePlayerStateChange);
+    }
+  
+    return () => {
+      if (spotifyPlayer) {
+        spotifyPlayer.removeListener("player_state_changed", handlePlayerStateChange);
+      }
+    };
+  }, [spotifyPlayer, setSongIsPlaying]);
 
   console.log("Playlist ID in PlayerAndQueue:", playlistId);
 
@@ -327,6 +346,7 @@ export default function PlayerAndQueue({ token }) {
           deviceId={deviceId}
           addSongsToQueue={addToQueue}
           isSdkReady={isSdkReady}
+          songIsPlaying={songIsPlaying}
         />
         <Queue
           token={token}
@@ -339,6 +359,7 @@ export default function PlayerAndQueue({ token }) {
           deviceId={deviceId}
           isSdkReady={isSdkReady}
           loading={loading}
+          songIsPlaying={songIsPlaying}
         />
       </SongIsPlaying>
     </section>
