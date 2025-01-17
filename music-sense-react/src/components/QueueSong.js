@@ -16,7 +16,6 @@ export default function Queue({
   currentSong,
   songIsPlaying,
 }) {
-  const [isPlaying, setIsPlaying] = useState(false);
   const { playing, setPlaying } = useSongIsPlaying();
 
   const handleTogglePlay = async () => {
@@ -26,7 +25,6 @@ export default function Queue({
       } catch {
         player.togglePlay();
       }
-      setIsPlaying(false);
       setPlaying(false);
     } else {
       const songToPlay = queueSongUri;
@@ -35,7 +33,6 @@ export default function Queue({
       } catch {
         player.togglePlay();
       }
-      setIsPlaying(true);
       setPlaying(true);
       console.log("setPlaying set to true");
     }

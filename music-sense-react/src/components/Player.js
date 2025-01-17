@@ -26,7 +26,6 @@ export default function Player({
   isSdkReady,
   songIsPlaying,
 }) {
-  const [isPlaying, setIsPlaying] = useState(false);
   const [isRepeat, setIsRepeat] = useState(false);
   const [isShuffle, setIsShuffle] = useState(false);
   const [addedToFavorites, setAddedToFavorites] = useState(false);
@@ -41,7 +40,6 @@ export default function Player({
       } catch {
         player.togglePlay();
       }
-      setIsPlaying(false);
       setPlaying(false);
     } else {
       const songToPlay = currentSong?.track?.uri;
@@ -56,7 +54,6 @@ export default function Player({
       } catch {
         player.togglePlay();
       }
-      setIsPlaying(true);
       setPlaying(true);
       console.log("setPlaying set to true");
     }
