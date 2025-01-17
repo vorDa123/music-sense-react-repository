@@ -117,6 +117,11 @@ export default function Player({
 
   const handleInput = (e) => {
     setValue(e.target.value); // Update state with the slider value
+    // Optionally, seek to a specific time if the user manually moves the slider
+    if (player) {
+      const newPosition = (e.target.value / 100) * duration;
+      player.seek(newPosition); // Seek to the new position in the song
+    }
   };
 
   const getBackgroundStyle = () => {
@@ -146,6 +151,31 @@ export default function Player({
   const handleUpdate = (latest) => {
     currentRotation.current = latest.rotate % 360; // Keep track of the rotation value
   };
+  const [duration, setDuration] = useState(0);
+  useEffect(() => {
+    // Get the song duration when the song is loaded or changed
+    if (currentSong) {
+      setDuration(currentSong?.duration_ms);
+    }
+  }, [currentSong]);
+
+  // Sync the slider value with song progress
+  useEffect(() => {
+    if (songIsPlaying && player) {
+      const interval = setInterval(async () => {
+        const state = await player.getCurrentState();
+        if (state && state.track_window.current_track) {
+          const position = state.position; // current playback position in ms
+          const duration = state.track_window.current_track.duration_ms; // song duration in ms
+
+          // Update slider value based on current position in the song
+          setValue((position / duration) * 100);
+        }
+      }, 1000); // Update every 1 second
+
+      return () => clearInterval(interval); // Cleanup interval on unmount
+    }
+  }, [songIsPlaying, player, duration]);
 
   if (isSdkReady && playing) {
     return (
