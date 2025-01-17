@@ -35,12 +35,17 @@ html body {
 
 nav {
   position: fixed;
+  width: 100vw;
+  height: 65px;
+  z-index: 1;
+}
+
+.navContent {
   width: 95vw;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  z-index: 1;
 }
 
 .hamburgerMenu {

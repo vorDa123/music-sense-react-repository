@@ -178,7 +178,6 @@ export default function Player({
               onChange={handleInput}
               style={getBackgroundStyle()}
             ></input>
-            {/* <div className="songLengthPoint"></div> */}
             <span className="songDuration">{formattedDuration()}</span>
           </div>
           <div className="playerControls">
