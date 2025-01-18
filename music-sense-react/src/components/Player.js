@@ -48,7 +48,7 @@ export default function Player({
         // Add each song in songQueue to Spotify's playback queue
         for (const song of queueSongs) {
           const songUri = song.track.uri;
-          console.log("Adding song to queue:", songUri); // Log the song URI
+          console.log("Adding song to queue:", song.track.name); // Log the song URI
           await addSongsToQueue(songUri, deviceId); // Add track to Spotify queue
         }
       } catch {
@@ -58,10 +58,6 @@ export default function Player({
       console.log("setPlaying set to true");
     }
   };
-
-  useEffect(() => {
-    console.log("Playing state from context:", playing);
-  }, [playing]);
 
   const handleToggleRepeat = () => {
     if (isRepeat) {
@@ -101,7 +97,6 @@ export default function Player({
     currentSong?.duration_ms || currentSong?.track?.duration_ms;
 
   const formattedDuration = () => {
-    console.log("Song Duration:", songDuration); // Debug log
     if (!songDuration) return "0:00";
     const totalSeconds = Math.floor(songDuration / 1000); // Convert to seconds
     const minutes = Math.floor(totalSeconds / 60); // Get whole minutes

@@ -94,7 +94,7 @@ export default function Queue({
         setPlaying(false); // Reset setPlaying to avoid endless loop
         hasFetchedQueue.current = false; // Reset fetch tracking for future calls
       }, 10000); // Adjust delay as needed
-    }
+    } // eslint-disable-next-line
   }, [playing, token]); // Run effect when setPlaying or token changes
 
   if (token && isSdkReady && playerQueue.length > 0) {
@@ -123,7 +123,7 @@ export default function Queue({
         </div>
       </article>
     );
-  } else if (token && defaultQueueSongs.length > 0 && !loading) {
+  } else if (token && queueSongs.length > 0 && !loading) {
     return (
       <article className="inQueueSection">
         <h1 className="title">In queue</h1>

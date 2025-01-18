@@ -2,12 +2,10 @@ import "App.css";
 import MusicSenseLogo from "assets/MusicSenseLogo.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 
 export default function SignInRegister({ onTokenUpdate, onExit, menuClicked }) {
   const CLIENT_ID = "727a7c097cfb4ec4997132e3824c3a6d";
-  const CLIENT_SECRET = "96548f701f594b1b980d1d33ef2fd04b";
   const SPOTIFY_AUTHORIZE_ENDPOINT = "https://accounts.spotify.com/authorize";
   const REDIRECT_URI_AFTER_LOGIN = "http://localhost:3000";
   const SPACE_DELIMITER = "%20";

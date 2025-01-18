@@ -1,7 +1,6 @@
 import "App.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faPause } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
 import { useSongIsPlaying } from "../SongIsPlayingContext";
 
 export default function Queue({
@@ -55,7 +54,7 @@ export default function Queue({
           {queueSongArtist || "Divlje Jagode"}
         </span>
       </div>
-      {songIsPlaying && queueSongId == currentSong.id ? (
+      {songIsPlaying && queueSongId === currentSong.id ? (
         <FontAwesomeIcon
           icon={faPause}
           className="playIconQueue"

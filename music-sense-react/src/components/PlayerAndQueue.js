@@ -1,6 +1,6 @@
 import "App.css";
 import axios from "axios";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { usePlaylist } from "../PlaylistProvider";
 import { SongIsPlaying } from "../SongIsPlayingContext";
 
@@ -9,7 +9,6 @@ import Player from "components/Player.js";
 import Queue from "components/Queue.js";
 
 export default function PlayerAndQueue({ token }) {
-  // const player = useRef(new Audio());
   const [currentSong, setCurrentSong] = useState(null);
   const [songQueue, setSongQueue] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -47,19 +46,23 @@ export default function PlayerAndQueue({ token }) {
       const isCurrentlyPlaying = !state.paused;
       setSongIsPlaying(isCurrentlyPlaying); // Update context state
     };
-  
+
     if (spotifyPlayer) {
-      spotifyPlayer.addListener("player_state_changed", handlePlayerStateChange);
+      spotifyPlayer.addListener(
+        "player_state_changed",
+        handlePlayerStateChange
+      );
     }
-  
+
     return () => {
       if (spotifyPlayer) {
-        spotifyPlayer.removeListener("player_state_changed", handlePlayerStateChange);
+        spotifyPlayer.removeListener(
+          "player_state_changed",
+          handlePlayerStateChange
+        );
       }
     };
   }, [spotifyPlayer, setSongIsPlaying]);
-
-  console.log("Playlist ID in PlayerAndQueue:", playlistId);
 
   useEffect(() => {
     // Load Spotify Web Playback SDK
@@ -93,7 +96,7 @@ export default function PlayerAndQueue({ token }) {
             },
           }
         );
-        console.log("Fetched queue:", data);
+        console.log("Fetched queue in playerQueueFetch:", data);
         const numberOfSongs = data.items.length;
 
         const queueWithRandomSongs = [];
@@ -105,8 +108,6 @@ export default function PlayerAndQueue({ token }) {
           );
           queueWithRandomSongs.push(data.items[randomIndex]);
         }
-
-        console.log("Number of songs:", numberOfSongs);
 
         const queue = queueWithRandomSongs;
 
@@ -123,28 +124,6 @@ export default function PlayerAndQueue({ token }) {
 
     playerQueueFetch();
 
-    const fetchDevices = async () => {
-      try {
-        const response = await axios.get(
-          "https://api.spotify.com/v1/me/player/devices",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log("Available devices:", response.data.devices);
-      } catch (error) {
-        console.error(
-          "Error fetching devices:",
-          error.response ? error.response.data : error.message
-        );
-      }
-    };
-
-    // Call fetchDevices to check the available devices
-    fetchDevices();
-
     if (isSdkReady && token) {
       const player = new window.Spotify.Player({
         name: "Music Sense Web Player",
@@ -158,7 +137,7 @@ export default function PlayerAndQueue({ token }) {
       player.addListener("ready", ({ device_id }) => {
         console.log("Ready with Device ID:", device_id);
         setDeviceId(device_id);
-        console.log("Fetched queue:", songQueue);
+        console.log("Fetched queue in player ready listener:", songQueue);
         // Ensure the device is active before adding tracks to the queue
         const checkDeviceState = async () => {
           try {
@@ -236,7 +215,7 @@ export default function PlayerAndQueue({ token }) {
       return () => {
         player.disconnect();
       };
-    }
+    } // eslint-disable-next-line
   }, [isSdkReady, token, playlistId]);
 
   const playSong = async (uri) => {
