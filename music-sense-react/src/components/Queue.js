@@ -51,9 +51,11 @@ export default function Queue({
   const { playing, setPlaying } = useSongIsPlaying();
   const hasFetchedQueue = useRef(false); // Track if queue fetch has been triggered
 
+  const isFetchingQueue = useRef(false);
+
   console.log("Queue: isPlaying =", playing);
   const playerQueueFetch = async () => {
-    if (!token) return;
+    if (isFetchingQueue.current) return;
 
     try {
       const { data } = await axios.get(
@@ -80,6 +82,8 @@ export default function Queue({
           error.response?.data || error.message
         );
       }
+    } finally {
+      isFetchingQueue.current = false;
     }
   };
 
