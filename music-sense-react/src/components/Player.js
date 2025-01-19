@@ -7,6 +7,9 @@ import {
   faShuffle,
   faStar,
   faPause,
+  faVolumeLow,
+  faVolumeXmark,
+  faVolumeHigh,
 } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faRegStar } from "@fortawesome/free-regular-svg-icons";
 import { useState, useEffect, useRef } from "react";
@@ -111,16 +114,31 @@ export default function Player({
   const [value, setValue] = useState(0); // Initialize the slider value
 
   const handleInput = (e) => {
-    setValue(e.target.value); // Update state with the slider value
+    const newValue = e.target.value;
+    setValue(newValue); // Update state with the slider value
     // Optionally, seek to a specific time if the user manually moves the slider
     if (player) {
-      const newPosition = (e.target.value / 100) * duration;
+      const newPosition = (newValue / 100) * duration;
       player.seek(newPosition); // Seek to the new position in the song
     }
   };
 
+  const [volumeValue, setVolumeValue] = useState(50); // Initialize the volume value
+  const handleVolumeInput = (e) => {
+    const newVolume = e.target.value;
+    setVolumeValue(newVolume); // Update state with the slider value
+    player.setVolume(newVolume / 100);
+  };
+
   const getBackgroundStyle = () => {
     const percentage = (value / 100) * 100; // Calculate percentage for gradient
+    return {
+      background: `linear-gradient(to right, #ffe204 0%, #ffe204 ${percentage}%, #ffffff ${percentage}%, #ffffff 100%)`,
+    };
+  };
+
+  const getVolumeBackgroundStyle = () => {
+    const percentage = (volumeValue / 100) * 100; // Calculate percentage for gradient
     return {
       background: `linear-gradient(to right, #ffe204 0%, #ffe204 ${percentage}%, #ffffff ${percentage}%, #ffffff 100%)`,
     };
@@ -283,6 +301,25 @@ export default function Player({
               onClick={handleToggleRepeat}
             />
           </div>
+          <div className="volumeControls">
+            {volumeValue <= 1 ? (
+              <FontAwesomeIcon icon={faVolumeXmark} className="playerIcon" />
+            ) : volumeValue >= 50 ? (
+              <FontAwesomeIcon icon={faVolumeHigh} className="playerIcon" />
+            ) : (
+              <FontAwesomeIcon icon={faVolumeLow} className="playerIcon" />
+            )}
+            <input
+              type="range"
+              id="volumeSlider"
+              className="volumeLength"
+              onChange={handleVolumeInput}
+              min={0}
+              max={100}
+              value={volumeValue}
+              style={getVolumeBackgroundStyle()}
+            ></input>
+          </div>
         </div>
       </article>
     );
@@ -400,6 +437,25 @@ export default function Player({
               }
               onClick={handleToggleRepeat}
             />
+          </div>
+          <div className="volumeControls">
+            {volumeValue <= 1 ? (
+              <FontAwesomeIcon icon={faVolumeXmark} className="playerIcon" />
+            ) : volumeValue >= 50 ? (
+              <FontAwesomeIcon icon={faVolumeHigh} className="playerIcon" />
+            ) : (
+              <FontAwesomeIcon icon={faVolumeLow} className="playerIcon" />
+            )}
+            <input
+              type="range"
+              id="volumeSlider"
+              className="volumeLength"
+              onChange={handleVolumeInput}
+              value={volumeValue}
+              min={0}
+              max={100}
+              style={getVolumeBackgroundStyle()}
+            ></input>
           </div>
         </div>
       </article>

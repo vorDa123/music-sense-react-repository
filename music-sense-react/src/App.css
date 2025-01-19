@@ -177,6 +177,20 @@ nav {
   align-items: center;
 }
 
+.volumeControls {
+  margin-top: 30px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.volumeLength {
+  background-color: #ffffff;
+  height: 5px;
+  width: 100%;
+  border-radius: 30px;
+}
+
 input[type="range"] {
   -webkit-appearance: none;
   background-color: #ffffff;
