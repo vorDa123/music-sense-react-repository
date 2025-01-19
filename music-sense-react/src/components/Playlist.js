@@ -4,10 +4,8 @@ import {
   motion,
   useMotionValue,
   useTransform,
-  useMotionTemplate,
   useSpring,
 } from "motion/react";
-import { useEffect, useState, useRef } from "react";
 
 export default function Playlist({ playlistId, playlistName, playlistImage }) {
   const { setPlaylistId } = usePlaylist();
