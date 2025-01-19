@@ -2,6 +2,7 @@ import "App.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faPause } from "@fortawesome/free-solid-svg-icons";
 import { useSongIsPlaying } from "../SongIsPlayingContext";
+import { motion } from "motion/react";
 
 export default function Queue({
   queueSongId,
@@ -14,6 +15,7 @@ export default function Queue({
   playSong,
   currentSong,
   songIsPlaying,
+  queueSongVariants,
 }) {
   const { playing, setPlaying } = useSongIsPlaying();
 
@@ -37,7 +39,14 @@ export default function Queue({
     }
   };
   return (
-    <div className="songInQueue" key={queueSongId}>
+    <motion.div
+      className="songInQueue"
+      key={queueSongId}
+      variants={queueSongVariants}
+      initial="notLoaded"
+      animate="loaded"
+      exit="exit"
+    >
       <div
         className="songImage"
         style={{
@@ -67,6 +76,6 @@ export default function Queue({
           onClick={handleTogglePlay}
         />
       )}
-    </div>
+    </motion.div>
   );
 }
